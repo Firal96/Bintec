@@ -39,22 +39,35 @@ app.use(express.static(path.join(__dirname, 'public')));
 //Connection to MoingoDb
 mongoose.connect('mongodb://localhost:27017/Bintec');
 
-//Load all models
-//fs.readdirSync(__dirname + '/models').forEach(function (filename){
-//	if(~filename.indexOf('.js')) require(__dirname + '/models/' + filename)
-//});
-
 app.get('/Persona/:idUsuario', function(req, res){
-	mongoose.model('Personas').find({_id : req.params.idUsuario},function(err, persona){
+	if(req.params.idUsuario){
+		console.log("entre" + req.params.idUsuario);
+		mongoose.model('Personas').find({_id : req.params.idUsuario},function(err, persona){
+			response.error = err;
+			response.data = persona;
+			if(err!=null && persona == {}){
+				response.error = "404";
+				response.errorMessage = "No se encontraron datos";
+			}
+			res.send(response);
+		});
+	}
+});
+
+app.get('/Persona', function(req, res){
+	console.log("por aca");
+	mongoose.model('Personas').find(function(err, persona){
 		response.error = err;
 		response.data = persona;
-		if(err!=null || persona == {}){
+		if(err!=null && persona == {}){
 			response.error = "404";
 			response.errorMessage = "No se encontraron datos";
 		}
 		res.send(response);
 	});
+	
 });
+
 
 app.post('/Persona',function(req, res){
 	let persona = new Personas();
