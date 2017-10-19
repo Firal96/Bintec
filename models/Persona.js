@@ -8,10 +8,9 @@ var persona = new Schema({
     NumCel: String,
     tipoDoc: String,
     numDoc: String,
-    cuentas : [
-        {NumeroCuenta: string,
-         password: string,}
-    ],
+    cuentas : [{numCta : String, contra : String}],
+    susActuales : [{idSus : { type: Schema.ObjectId, ref : 'Suscripciones'}}],
+
 
 },
 {

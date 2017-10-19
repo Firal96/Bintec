@@ -2,7 +2,7 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var Entidad = new Schema({
+var Entidades = new Schema({
     nombre : String,
     telefono : Number,
     direccion : String,
@@ -15,7 +15,7 @@ var Entidad = new Schema({
     
 },
 {
-	collection : "Personas"
+	collection : "Entidades"
 });
 // Compile model from schema
-mongoose.model('Personas', persona );
+mongoose.model('Entidades', Entidades );
