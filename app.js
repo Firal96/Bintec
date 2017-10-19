@@ -39,6 +39,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 //Connection to MoingoDb
 mongoose.connect('mongodb://localhost:27017/Bintec');
 
+//Verbos para persona
+
 app.get('/Persona/:idUsuario', function(req, res){
 	if(req.params.idUsuario){
 		console.log("entre" + req.params.idUsuario);
@@ -53,9 +55,6 @@ app.get('/Persona/:idUsuario', function(req, res){
 		});
 	}
 });
-
-//Verbos para persona
-
 
 app.get('/Persona', function(req, res){
 	console.log("por aca");
@@ -75,11 +74,16 @@ app.get('/Persona', function(req, res){
 app.post('/Persona',function(req, res){
 	let persona = new Personas();
 	persona.nombre = req.body.nombre;
+	persona.usuario = req.body.usuario;
 	persona.correo = req.body.correo;
 	persona.contrasena = req.body.contrasena;
 	persona.numCel = req.body.numCel;
 	persona.tipoDoc = req.body.tipoDoc;
 	persona.numDoc = req.body.numDoc;
+	var concat = req.body.usuario + req.body.contrasena;
+	let buff = new Buffer(concat);  
+	let base64data = buff.toString('base64');
+	persona.codigo = base64data;
 	persona.save(function(err, personaCreada){
 		response.error = err;
 		response.data = personaCreada;
@@ -124,6 +128,9 @@ app.patch('/Persona/:idUsuario',function(req, res){
 	});
 
 });
+
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
