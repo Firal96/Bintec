@@ -8,6 +8,7 @@ var cors=require('cors');
 var mongoose = require('mongoose');
 var fs = require('fs');
 var Personas = require('./models/Persona');
+//var email = require('./Email');
 //var Ids=require('./routes/routing');
 //var index = require('./routes/index');
 //var users = require('./routes/users');
@@ -47,7 +48,8 @@ app.get('/Persona/:idUsuario', function(req, res){
 	mongoose.model('Personas').find({_id : req.params.idUsuario},function(err, persona){
 		response.error = err;
 		response.data = persona;
-		if(err!=null){
+		if(err!=null || persona == {}){
+			response.error = "404";
 			response.errorMessage = "No se encontraron datos";
 		}
 		res.send(response);
@@ -68,6 +70,40 @@ app.post('/Persona',function(req, res){
 			response.errorMessage = "No se pudo Crear la Persona";
 		}
 		res.send(response);
+	});
+
+});
+
+app.patch('/Persona/:idUsuario',function(req, res){
+	mongoose.model('Personas').find({_id : req.params.idUsuario},function(err, persona){
+		if(req.body.type == "cuenta"){
+			var cuenta = {
+				"numCta" : req.body.numCta,
+				"contra" : req.body.contra
+			}
+			mongoose.model('Personas').findOneAndUpdate({_id: req.params.idUsuario}, {$push: {cuentas: cuenta}},function(error,personac){
+				response.error = error;
+				response.data = cuenta;
+				if (err!=null){
+					response.errorMessage = "No se pudo agregar la cuenta";
+				}
+				res.send(response);
+			});
+		}
+		else{
+			var suscripcion = {
+				"idSus" : req.body.idSus
+			}
+			mongoose.model('Personas').findOneAndUpdate({_id: req.params.idUsuario}, {$push: {idSus: suscripcion}},function(error,personac){
+				response.error = error;
+				response.data = suscripcion;
+				if (err!=null){
+					response.errorMessage = "No se pudo agregar la suscripcion";
+				}
+				res.send(response);
+			});
+		}
+
 	});
 
 });

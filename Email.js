@@ -4,7 +4,7 @@ var request = require('request'),
 var env = process.env.NODE_ENV || config.defaultEnv;
 
 var postData = {
-  "user":alejo;
+  "user":"alejo";
 };
 
 var options = {
