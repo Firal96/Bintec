@@ -11,11 +11,10 @@ var Entidades = new Schema({
     ],
     numDoc : Number,
     tpoDoc : Number,
-    cuentas : [{numCta : String, contra : String}]
-    
+    cuentas : [{numCta : String, contra : String}]    
 },
 {
 	collection : "Entidades"
 });
 // Compile model from schema
-mongoose.model('Entidades', Entidades );
+module.exports = mongoose.model('Entidades', Entidades );

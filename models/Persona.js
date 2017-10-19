@@ -4,15 +4,13 @@ var Schema = mongoose.Schema;
 
 var persona = new Schema({
 	codigo: String,
-    nombre: String,
-    usuario: String,
     correo: String,
     contrasena: String,
     numCel: String,
     tipoDoc: String,
     numDoc: String,
     cuentas : [{numCta : String, contra : String}],
-    susActuales : [{idSus : { type: Schema.ObjectId, ref : 'Suscripciones'}}],
+    susActuales : [{idSus : { type: Schema.ObjectId, ref : 'Suscripciones'}}]
 },
 {
 	collection : "Personas"

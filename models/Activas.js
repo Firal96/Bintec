@@ -12,4 +12,4 @@ var Activas = new Schema({
 	collection : "Activas"
 });
 // Compile model from schema
-mongoose.model('Activas', Activas );
+module.exports = mongoose.model('Activas', Activas );
