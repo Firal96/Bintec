@@ -5,6 +5,7 @@ var Schema = mongoose.Schema;
 var persona = new Schema({
     nombre: String,
     correo: String,
+    contrasena: String,
     numCel: String,
     tipoDoc: String,
     numDoc: String,

@@ -54,6 +54,9 @@ app.get('/Persona/:idUsuario', function(req, res){
 	}
 });
 
+//Verbos para persona
+
+
 app.get('/Persona', function(req, res){
 	console.log("por aca");
 	mongoose.model('Personas').find(function(err, persona){
@@ -73,6 +76,7 @@ app.post('/Persona',function(req, res){
 	let persona = new Personas();
 	persona.nombre = req.body.nombre;
 	persona.correo = req.body.correo;
+	persona.contrasena = req.body.contrasena;
 	persona.numCel = req.body.numCel;
 	persona.tipoDoc = req.body.tipoDoc;
 	persona.numDoc = req.body.numDoc;
