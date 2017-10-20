@@ -41,10 +41,13 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 //Connection to MoingoDb
-mongoose.connect('mongodb://localhost:27017/Bintec');
+mongoose.connect('mongodb://admin:bintec2017@ds125565.mlab.com:25565/bintec');
 
-//Verbos para persona
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+//Apis de Personas
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 app.get('/Persona/:idUsuario', function(req, res){
 	if(req.params.idUsuario){
 		console.log("entre" + req.params.idUsuario);
@@ -144,7 +147,11 @@ app.delete('/Persona',function(req, res){
 	});
 });
 
-//Api de Entidades
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//Apis de Entidades
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 app.get('/Entidad', function(req, res){
 	mongoose.model('Entidades').find(function(err, entidad){
@@ -224,7 +231,7 @@ app.patch('/Entidad/:idEntidad',function(req, res){
 //			});
 //		}
 
-	});
+});
 
 });
 
@@ -241,6 +248,123 @@ app.delete('/Entidad',function(req, res){
 
 	});
 });
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//Apis de Suscripcion
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+app.get('/Suscripcion', function(req, res){
+	mongoose.model('Suscripciones').find(function(err, suscripcion){
+		response.error = err;
+		response.data = suscripcion;
+		if(suscripcion == {}){
+			response.error = "404";
+			response.errorMessage = "No se encontraron datos";
+		}
+		res.send(response);
+	});	
+});
+
+app.get('/Suscripcion/:idSuscripcion', function(req, res){
+	mongoose.model('Suscripciones').find({_id : req.params.idSuscripcion},function(err, suscripcion){
+		response.error = err;
+		response.data = suscripcion;
+		if(suscripcion == {}){
+			response.error = "404";
+			response.errorMessage = "No se encontraron datos";
+		}
+		res.send(response);
+	});
+});
+
+app.post('/Suscripcion',function(req, res){
+	let suscripcion = new Suscripcionesentidad();
+	suscripcion.costo = req.body.costo;
+	suscripcion.tiempo = req.body.tiempo;
+	suscripcion.entidad = req.body.entidad;	
+	suscripcion.save(function(err, suscripcionCreada){
+		var sus = {
+			"idSus" : suscripcionCreada._id
+		}
+		mongoose.model('Entidades').findOneAndUpdate({_id: req.body.entidad}, {$push: {suscripciones: sus}},function(error,suscripcionc){});	
+		response.error = err;
+		response.data = suscripcionCreada;
+		if (err!=null){
+			response.errorMessage = "No se pudo Crear la Suscripcion";
+		}
+		res.send(response);
+	});
+});
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//Apis de Activos
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+app.get('/Activas', function(req, res){
+	mongoose.model('Activas').find(function(err, activas){
+		response.error = err;
+		response.data = activas;
+		if(activas == {}){
+			response.error = "404";
+			response.errorMessage = "No se encontraron datos";
+		}
+		res.send(response);
+	});	
+});
+
+app.get('/Activas/:type/:id/', function(req, res){
+	if(req.params.type = "usuarios"){
+		mongoose.model('Activas').find({usuarios : req.params.id},function(err, activas){
+			response.error = err;
+			response.data = activas;
+			if(activas == {}){
+				response.error = "404";
+				response.errorMessage = "No se encontraron datos";
+			}
+			res.send(response);
+		});
+	}
+	else{
+		mongoose.model('Activas').find({suscripciones : req.params.id},function(err, activas){
+			response.error = err;
+			response.data = activas;
+			if(activas == {}){
+				response.error = "404";
+				response.errorMessage = "No se encontraron datos";
+			}
+			res.send(response);
+		});
+	}
+	
+});
+
+app.post('/Activas',function(req, res){
+	let activar = new Activas();
+	activar.usuario = req.body.usuario;
+	activar.suscripcion = req.body.suscripcion;
+	var tiempo;
+	mongoose.model('Suscripciones').find({_id : req.params.idSuscripcion},function(err, suscripcion){
+		tiempo = suscripcion.tiempo;
+	});
+	activar.tiempoRes = tiempo;
+	activar.save(function(err, suscripcionCreada){
+		var sus = {
+			"idSus" : suscripcionCreada._id
+		}
+		mongoose.model('Personas').findOneAndUpdate({_id: req.body.usuario}, {$push: {susActuales: sus}},function(error,persona){});	
+		response.error = err;
+		response.data = suscripcionCreada;
+		if (err!=null){
+			response.errorMessage = "No se pudo Crear la Activacion";
+		}
+		res.send(response);
+	});
+});
+
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

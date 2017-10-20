@@ -4,8 +4,8 @@ var Schema = mongoose.Schema;
 
 var Activas = new Schema({
     tiempoRes : Number,
-    usuarios :  { type: Schema.ObjectId, ref : 'Personas'},
-    suscripciones : { type: Schema.ObjectId, ref : 'Suscripciones'},
+    usuario :  { type: Schema.ObjectId, ref : 'Personas'},
+    suscripcion : { type: Schema.ObjectId, ref : 'Suscripciones'},
        
 },
 {

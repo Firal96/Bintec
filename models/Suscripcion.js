@@ -2,8 +2,8 @@
 var mongoose = require('mongoose');
 var Schema = mongoose.Schema;
 
-var Suscripcion = new Schema({
-	entidad: { type: Schema.ObjectId, ref : 'Entidades'};
+var Suscripciones = new Schema({
+	entidad: { type: Schema.ObjectId, ref : 'Entidades'},
     tiempo: Number,
     costo: Number
 },
@@ -11,4 +11,4 @@ var Suscripcion = new Schema({
 	collection : "Suscripciones"
 });
 // Compile model from schema
-module.exports = mongoose.model('Suscripciones', Suscripcion );
+module.exports = mongoose.model('Suscripciones', Suscripciones );
